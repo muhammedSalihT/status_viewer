@@ -17,16 +17,18 @@ class AllStatusProvider extends ChangeNotifier {
   List<AllStatusModel> arayaList = [];
   List<String>? imageList = [];
 
+  bool isLoding = false;
 
-
-  getAllStatus() async {
-    log(allStatusList.toString());
+  void getAllStatus() async {
+    isLoding = true;
+    notifyListeners();
     final response = await GetAllStatusApi.getAllStatus();
     allStatusList = (json.decode(response.body) as List)
         .map((data) => AllStatusModel.fromJson(data))
         .toList();
+
     notifyListeners();
-    log(allStatusList.toString());
+    // log(allStatusList.toString());
     snowList = allStatusList
         .where((element) => element.profile!.name == "Jon Snow")
         .toList();
@@ -40,20 +42,26 @@ class AllStatusProvider extends ChangeNotifier {
     showList.add(lansisterList);
     showList.add(arayaList);
 
-    log(snowList.toString());
-    log(arayaList.toString());
-    log(lansisterList.toString());
-    log(showList.toString());
+    // log(snowList.toString());
+    // log(arayaList.toString());
+    // log(lansisterList.toString());
+    // log(showList.toString());
 
     List<String>? getImages(List<AllStatusModel> list) {
-      for (AllStatusModel i in list) {
-        log(i.toString());
-        imageList?.add(i.image!);
+      for (final element in list) {
+        log(element.image.toString());
+        imageList!.add(element.image ?? "");
       }
       return imageList;
     }
 
-    log(eachList.toString());
+    // log(eachList.toString());
+
+    eachList.add(PersonStatusModel(
+        getImages(lansisterList),
+        lansisterList.first.profile!.image,
+        lansisterList.first.profile!.name,
+        "11:55 PM"));
 
     eachList.add(PersonStatusModel(
         getImages(lansisterList),
@@ -61,26 +69,16 @@ class AllStatusProvider extends ChangeNotifier {
         lansisterList.first.profile!.name,
         "11:55 PM"));
     eachList.add(PersonStatusModel(
-        getImages(lansisterList),
-        lansisterList.first.profile!.image,
-        lansisterList.first.profile!.name,
-        "11:55 PM"));
-    eachList.add(PersonStatusModel(
-        getImages(lansisterList),
-        lansisterList.first.profile!.image,
-        lansisterList.first.profile!.name,
-        "11:55 PM"));
-    // eachList.add(PersonStatusModel(
-    //     getImages(snowList),
-    //     snowList.first.profile!.image,
-    //     snowList.first.profile!.name,
-    //     "2:20 AM"));
+        getImages(snowList),
+        snowList.first.profile!.image,
+        snowList.first.profile!.name,
+        "2:20 AM"));
     eachList.add(PersonStatusModel(
         getImages(arayaList),
         arayaList.first.profile!.image,
         arayaList.first.profile!.name,
         "9:00 PM"));
-    log(eachList.toString());
+    // log(eachList.toString());
     notifyListeners();
   }
 }
